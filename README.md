@@ -1,6 +1,6 @@
 # LambdaCD-TestNG
 
-Clojure library to display TestNG reports at the top of a LambdaCD step
+Clojure library to display TestNG reports at the top of a LambdaCD step.
 
 ## Usage
 
