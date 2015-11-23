@@ -1,6 +1,6 @@
-# lambdacd-testng
+# LambdaCD-TestNG
 
-A Clojure library designed to ... well, that part is up to you.
+Clojure library to display TestNG reports at the top of a LambdaCD step
 
 ## Usage
 
@@ -8,7 +8,6 @@ FIXME
 
 ## License
 
-Copyright © 2015 FIXME
+Copyright © 2015 OTTO (GmbH & Co. KG)
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under [Apache Public License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
