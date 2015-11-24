@@ -12,8 +12,8 @@
       (zip/xml-zip)
       (first)))
 
-(defn get-report-summary [d]
-  (:attrs d))
+(defn get-report-summary-as-string [report]
+  (clojure.string/join ", " (map (fn [[k v]] (str (name k) ": " v)) (:attrs report))))
 
 (defn select-all-classes [report]
   (let [result {:classes         (select [:content ALL #(= (:tag %) :suite) :content ALL #(= (:tag %) :test) :content ALL] report)
@@ -62,7 +62,7 @@
 (defn success-result [report]
   {:label   "TestNG-Report"
    :details [{:label   "Summary:"
-              :details [{:label (get-report-summary (:original-report report))}]}
+              :details [{:label (get-report-summary-as-string (:original-report report))}]}
              (if (empty? (:classes report))
                {:label "There aren't any errors"}
                {:label   "Errors:"

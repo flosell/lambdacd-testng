@@ -4,7 +4,28 @@ Clojure library to display TestNG reports at the top of a LambdaCD step.
 
 ## Usage
 
-FIXME
+In your project.clj file:
+[![Clojars Project](http://clojars.org/lambdacd-testng/latest-version.svg)](http://clojars.org/lambdacd-testng)
+
+In your namespace declaration:
+```clojure
+(ns myapp.core
+  (:require [lambdacd-testng :as testng]))
+```
+
+### Create Marathon-Config
+
+Use it in LambdaCD within your build step. For example:
+```clojure
+(defn compile-to-jar
+  [{cwd :cwd {revision :revision} :global} ctx]
+  (let [version (str "0.1." (System/currentTimeMillis))
+        shell-result (shell/bash ctx cwd (str "ci/buildscripts/build.sh " version " " revision))]
+    (assoc shell-result :details [(testng/get-testng-report-as-details "build/reports/tests/testng-results.xml")])))
+```
+
+### Screenshot
+
 
 ## License
 
