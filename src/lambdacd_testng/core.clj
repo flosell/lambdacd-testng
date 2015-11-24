@@ -16,14 +16,22 @@
   (:attrs d))
 
 (defn select-all-classes [report]
-  {:classes (select [:content ALL #(= (:tag %) :suite) :content ALL #(= (:tag %) :test) :content ALL] report)
-   :report  report})
+  (let [result {:classes         (select [:content ALL #(= (:tag %) :suite) :content ALL #(= (:tag %) :test) :content ALL] report)
+                :original-report report}]
+    (if (empty? (:classes result))
+      (throw (Exception. "Can't find any test classes"))
+      result)))
 
 (defn delete-empty-classes [classes]
   (filter #(not (empty? (:test-methods %))) classes))
 
 (defn filter-classes-with-failed-methods [{classes :classes :as m}]
-  (assoc m :classes (delete-empty-classes (into [] (map (fn [cls] {:name (:name (:attrs cls)) :test-methods (select [:content ALL #(not (= "PASS" (:status (:attrs %))))] cls)}) classes)))))
+  (assoc m :classes
+           (delete-empty-classes
+             (into []
+                   (map
+                     (fn [cls] {:name (:name (:attrs cls)) :test-methods (select [:content ALL #(not (= "PASS" (:status (:attrs %))))] cls)})
+                     classes)))))
 
 (defn restructure-exceptions [exs]
   (into [] (map (fn [ex] {:class   (get-in ex [:attrs :class])
@@ -36,26 +44,36 @@
 (defn restructure-results [{classes :classes :as m}]
   (assoc m :classes (transform [ALL :test-methods ALL] restructure-test-method classes)))
 
-(defn get-classes-with-failed-methods [filename]
-  (some-> (parse-xml-file filename)
-          (select-all-classes)
-          (filter-classes-with-failed-methods)
-          (restructure-results)))
-
 (defn exception->details-map [ex]
   {:label (str (:class ex) " - " (:message ex))})
 
 (defn test-method->details-map [tm]
-  {:label (:name tm)
+  {:label   (:name tm)
    :details (into [] (map exception->details-map (:exceptions tm)))})
 
 (defn restructure-class [cls]
-  {:label (:name cls)
+  {:label   (:name cls)
    :details (into [] (map test-method->details-map (:test-methods cls)))})
 
-(defn map->artifact-structure [m]
-  {:label "TestNG-Report"
-   :details [{:label "Summary:"
-             :details [{:label (get-report-summary (:report m))}]}
-             {:label "Errors:"
-              :details (into [] (map restructure-class (:classes m)))}]})
+(defn error-result [msg]
+  {:label   "TestNG-Report"
+   :details [{:label (str "Internal Error: " msg)}]})
+
+(defn success-result [report]
+  {:label   "TestNG-Report"
+   :details [{:label   "Summary:"
+              :details [{:label (get-report-summary (:original-report report))}]}
+             (if (empty? (:classes report))
+               {:label "There aren't any errors"}
+               {:label   "Errors:"
+                :details (into [] (map restructure-class (:classes report)))})]})
+
+(defn get-testng-report-as-details [filename]
+  (try
+    (-> (parse-xml-file filename)
+        (select-all-classes)
+        (filter-classes-with-failed-methods)
+        (restructure-results)
+        (success-result))
+    (catch Exception e
+      (error-result (.getMessage e)))))
