@@ -24,8 +24,16 @@ Use it in LambdaCD within your build step. For example:
     (assoc shell-result :details [(testng/get-testng-report-as-details "build/reports/tests/testng-results.xml")])))
 ```
 
-### Screenshot
+### Screenshots
 
+Test without errors:
+
+![ScreenShot](/doc/images/wo-errors.png)
+
+
+Test with errors:
+
+-- coming soon --
 
 ## License
 
