@@ -30,12 +30,12 @@
            (delete-empty-classes
              (into []
                    (map
-                     (fn [cls] {:name (:name (:attrs cls)) :test-methods (select [:content ALL #(not (= "PASS" (:status (:attrs %))))] cls)})
+                     (fn [cls] {:name (:name (:attrs cls)) :test-methods (select [:content ALL #(= "FAIL" (:status (:attrs %)))] cls)})
                      classes)))))
 
 (defn restructure-exceptions [exs]
   (into [] (map (fn [ex] {:class   (get-in ex [:attrs :class])
-                          :message (s/trim (s/join "" (map #(s/join "" (:content %)) (:content ex))))}) exs)))
+                          :message (s/trim (s/join "<br/>" (map #(s/join "<br/>" (:content %)) (:content ex))))}) exs)))
 
 (defn restructure-test-method [tm]
   {:name       (get-in tm [:attrs :name])
