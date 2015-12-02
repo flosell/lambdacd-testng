@@ -1,4 +1,4 @@
-(defproject lambdacd-testng "0.1.3"
+(defproject lambdacd-testng "0.1.4"
   :description "Clojure library to display TestNG reports at the top of a LambdaCD step"
   :url "https://github.com/otto-de/lambdacd-testng"
   :scm {:name "git"
