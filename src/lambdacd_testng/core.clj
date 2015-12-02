@@ -35,7 +35,7 @@
 
 (defn restructure-exceptions [exs]
   (into [] (map (fn [ex] {:class   (get-in ex [:attrs :class])
-                          :message (s/trim (s/join "<br/>" (map #(s/join "<br/>" (:content %)) (:content ex))))}) exs)))
+                          :message (s/replace (s/trim (s/join "<br/>" (map #(s/join "<br/>" (:content %)) (:content ex)))) #" at " " at<br/>")}) exs)))
 
 (defn restructure-test-method [tm]
   {:name       (get-in tm [:attrs :name])
