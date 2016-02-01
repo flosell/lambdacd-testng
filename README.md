@@ -28,7 +28,7 @@ Use it in LambdaCD within your build step. For example:
 
 Test without errors:
 
-![ScreenShot](/doc/images/wo-errors.png)
+![ScreenShot](doc/images/wo-errors.png)
 
 
 Test with errors:
