@@ -13,7 +13,7 @@ In your namespace declaration:
   (:require [lambdacd-testng :as testng]))
 ```
 
-### Create Marathon-Config
+### Create a build step that runs a test and publishes the test results
 
 Use it in LambdaCD within your build step. For example:
 ```clojure
