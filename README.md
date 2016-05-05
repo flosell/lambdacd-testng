@@ -16,12 +16,12 @@ In your namespace declaration:
 ### Create Marathon-Config
 
 Use it in LambdaCD within your build step. For example:
+
 ```clojure
-(defn compile-to-jar
-  [{cwd :cwd {revision :revision} :global} ctx]
-  (let [version (str "0.1." (System/currentTimeMillis))
-        shell-result (shell/bash ctx cwd (str "ci/buildscripts/build.sh " version " " revision))]
-    (assoc shell-result :details [(testng/get-testng-report-as-details "build/reports/tests/testng-results.xml")])))
+(defn test [args ctx]
+  (support/always-chaining args ctx
+    (shell/bash ctx (:cwd args) "mvn test")
+    (parse-testng-report (:cwd args) "target/surefire-reports/testng-results.xml")))
 ```
 
 ### Screenshots

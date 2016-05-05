@@ -2,7 +2,8 @@
   (:require [clojure.xml :as xml]
             [clojure.zip :as zip]
             [com.rpl.specter :refer :all]
-            [clojure.string :as s]))
+            [clojure.string :as s]
+            [clojure.java.io :as io]))
 
 (defn parse-xml-file [filename]
   (-> (slurp filename)
@@ -77,3 +78,7 @@
         (success-result))
     (catch Exception e
       (error-result (.getMessage e)))))
+
+(defn parse-testng-report [cwd relative-path]
+  {:status  :success
+   :details [(get-testng-report-as-details (io/file cwd relative-path))]})
